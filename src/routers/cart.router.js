@@ -4,15 +4,15 @@ import { createCart, getCartProducts, addProductToCart } from '../cartManager.js
 const router = express.Router();
 
 // POST /api/carts/
-router.post('/', (req, res) => {
-  const cart = createCart();
+router.post('/', async (req, res) => {
+  const cart = await createCart();
   res.json(cart);
 });
 
 // GET /api/carts/:cid
-router.get('/:cid', (req, res) => {
+router.get('/:cid', async (req, res) => {
   const { cid } = req.params;
-  const cartProducts = getCartProducts(cid);
+  const cartProducts = await getCartProducts(cid);
   if (cartProducts) {
     res.json(cartProducts);
   } else {
@@ -21,10 +21,10 @@ router.get('/:cid', (req, res) => {
 });
 
 // POST /api/carts/:cid/product/:pid
-router.post('/:cid/product/:pid', (req, res) => {
+router.post('/:cid/product/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
-  const addedProduct = addProductToCart(cid, pid, quantity);
+  const addedProduct = await addProductToCart(cid, pid, quantity);
   if (addedProduct) {
     res.json(addedProduct);
   } else {
