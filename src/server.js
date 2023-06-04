@@ -6,7 +6,7 @@ import cartsRouter from './routers/cart.router.js';
 const app = express();
 const PORT = 8080;
 
-// Parse JSON request bodies
+// Parse JSON
 app.use(express.json());
 
 // Routes

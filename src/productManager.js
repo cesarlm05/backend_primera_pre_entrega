@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 
 const PRODUCTS_FILE = 'productos.json';
 
-// Helper function to read the product list from file
+// función para leer la lista de productos
 async function readProductList() {
   try {
     const data = await fs.readFile(PRODUCTS_FILE, 'utf8');
@@ -12,24 +12,24 @@ async function readProductList() {
   }
 }
 
-// Helper function to write the product list to file
+// función para guardar en la lista de productos
 async function writeProductList(products) {
   await fs.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
 }
 
-// Get the list of products
+// Obtiene la lista de productos
 export async function getProductList() {
   const products = await readProductList();
   return products;
 }
 
-// Get a product by ID
+// Obtiene un producto de la lista por ID
 export async function getProductById(pid) {
   const products = await readProductList();
   return products.find(product => product.id === pid);
 }
 
-// Add a new product
+// Add un nuevo producto
 export async function addProduct(product) {
   const products = await readProductList();
   const newProductId = Math.max(...products.map(p => p.id), 0) + 1;
@@ -39,7 +39,7 @@ export async function addProduct(product) {
   return newProduct;
 }
 
-// Update a product
+// Update un producto
 export async function updateProduct(pid, updatedFields) {
   const products = await readProductList();
   const productIndex = products.findIndex(product => product.id === pid);
@@ -53,7 +53,7 @@ export async function updateProduct(pid, updatedFields) {
   }
 }
 
-// Delete a product
+// Delete un producto
 export async function deleteProduct(pid) {
   const products = await readProductList();
   const productIndex = products.findIndex(product => product.id === pid);

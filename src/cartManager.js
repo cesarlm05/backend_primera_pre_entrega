@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 
 const CARTS_FILE = 'carrito.json';
 
-// Helper function to read the cart list from file
+// Función que lee la lista de cart
 async function readCartList() {
   try {
     const data = await fs.readFile(CARTS_FILE, 'utf8');
@@ -12,17 +12,17 @@ async function readCartList() {
   }
 }
 
-// Helper function to write the cart list to file
+
 async function writeCartList(carts) {
   await fs.writeFile(CARTS_FILE, JSON.stringify(carts, null, 2));
 }
 
-// Generate a new cart ID
+// Genera un nuevo cart ID
 function generateCartId() {
   return Math.random().toString(36).substr(2, 9);
 }
 
-// Create a new cart
+// Create un nuevo cart
 export async function createCart() {
   const carts = await readCartList();
   const newCartId = generateCartId();
@@ -32,14 +32,14 @@ export async function createCart() {
   return newCart;
 }
 
-// Get the products of a cart
+// Obtiene los productos del cart
 export async function getCartProducts(cid) {
   const carts = await readCartList();
   const cart = carts.find(c => c.id === cid);
   return cart ? cart.products : null;
 }
 
-// Add a product to a cart
+// Add un nuevo producto en le cart
 export async function addProductToCart(cid, pid, quantity) {
   const carts = await readCartList();
   const cartIndex = carts.findIndex(c => c.id === cid);

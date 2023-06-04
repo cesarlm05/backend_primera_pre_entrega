@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1",
+    "title": "Camara 360",
+    "description": "Camara Sony",
+    "code": "cam123",
+    "price": "46789",
+    "status": "`{true}`",
+    "stock": "50",
+    "category": "camaras",
+    "thumbnails": [
+      "uploads/3e296e20675e914909e4c039c92c4775"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Reloj ",
+    "description": "Amazfit",
+    "code": "rlj098",
+    "price": "25998",
+    "status": "false",
+    "stock": "78",
+    "category": "relojes",
+    "thumbnails": [
+      "uploads/c583f065f003f53d65845bf02348ee96"
+    ]
+  }
+]
