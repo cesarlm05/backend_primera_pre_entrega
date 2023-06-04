@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 
-const CARTS_FILE = "carrito.json";
+const CARTS_FILE = "src/models/carrito.json";
 
 // Función que lee la lista de cart
 async function readCartList() {

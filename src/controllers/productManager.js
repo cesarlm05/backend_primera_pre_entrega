@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 
-const PRODUCTS_FILE = "productos.json";
+const PRODUCTS_FILE = "src/models/productos.json";
 
 // función para leer la lista de productos
 async function readProductList() {
