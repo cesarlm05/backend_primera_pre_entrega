@@ -8,15 +8,15 @@ const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 // GET /api/products/
-router.get('/', (req, res) => {
-  const productList = getProductList();
+router.get('/', async (req, res) => {
+  const productList = await getProductList();
   res.json(productList);
 });
 
 // GET /api/products/:pid
-router.get('/:pid', (req, res) => {
+router.get('/:pid', async (req, res) => {
   const { pid } = req.params;
-  const product = getProductById(pid);
+  const product = await getProductById(pid);
   if (product) {
     res.json(product);
   } else {
@@ -25,7 +25,7 @@ router.get('/:pid', (req, res) => {
 });
 
 // POST /api/products/
-router.post('/', upload.array('thumbnails'), (req, res) => {
+router.post('/', upload.array('thumbnails'), async (req, res) => {
   const { title, description, code, price, status = true, stock, category } = req.body;
   const thumbnails = req.files.map(file => file.path);
   const product = {
@@ -38,15 +38,15 @@ router.post('/', upload.array('thumbnails'), (req, res) => {
     category,
     thumbnails,
   };
-  const addedProduct = addProduct(product);
+  const addedProduct = await addProduct(product);
   res.json(addedProduct);
 });
 
 // PUT /api/products/:pid
-router.put('/:pid', (req, res) => {
+router.put('/:pid', async (req, res) => {
   const { pid } = req.params;
   const updatedFields = req.body;
-  const updatedProduct = updateProduct(pid, updatedFields);
+  const updatedProduct = await updateProduct(pid, updatedFields);
   if (updatedProduct) {
     res.json(updatedProduct);
   } else {
@@ -55,9 +55,9 @@ router.put('/:pid', (req, res) => {
 });
 
 // DELETE /api/products/:pid
-router.delete('/:pid', (req, res) => {
+router.delete('/:pid', async (req, res) => {
   const { pid } = req.params;
-  const deletedProduct = deleteProduct(pid);
+  const deletedProduct = await deleteProduct(pid);
   if (deletedProduct) {
     res.json(deletedProduct);
   } else {

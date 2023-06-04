@@ -5,7 +5,7 @@
     "description": "Camara Sony",
     "code": "cam123",
     "price": "46789",
-    "status": "`{true}`",
+    "status": true,
     "stock": "50",
     "category": "camaras",
     "thumbnails": [
@@ -18,11 +18,24 @@
     "description": "Amazfit",
     "code": "rlj098",
     "price": "25998",
-    "status": "false",
+    "status": false,
     "stock": "78",
     "category": "relojes",
     "thumbnails": [
       "uploads/c583f065f003f53d65845bf02348ee96"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "otra cosa",
+    "description": "Descripcioon de la otra cosa",
+    "code": "otracosa123",
+    "price": "1234234",
+    "status": true,
+    "stock": "60",
+    "category": "otrascosas",
+    "thumbnails": [
+      "uploads/01e4239dcb09bbbcc60ecbef14f7e4e3"
     ]
   }
 ]
