@@ -1,67 +1,86 @@
 import fs from "fs/promises";
 
-const PRODUCTS_FILE = "src/models/productos.json";
-
-// función para leer la lista de productos
-async function readProductList() {
-  try {
-    const data = await fs.readFile(PRODUCTS_FILE, "utf8");
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
+class ProductManager {
+  constructor() {
+    this.productsFilePath = "src/models/productos.json";
   }
-}
 
-// función para guardar en la lista de productos
-async function writeProductList(products) {
-  await fs.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-}
+  async getAllProducts() {
+    const productsData = await this.readDataFromFile();
+    return productsData.products;
+  }
 
-// Obtiene la lista de productos
-export async function getProductList() {
-  const products = await readProductList();
-  return products;
-}
+  async getProductById(productId) {
+    const productsData = await this.readDataFromFile();
+    return productsData.products.find((product) => product.id === productId);
+  }
 
-// Obtiene un producto de la lista por ID
-export async function getProductById(pid) {
-  const products = await readProductList();
-  return products.find((product) => product.id === pid);
-}
+  async addProduct(newProduct) {
+    const productsData = await this.readDataFromFile();
+    const generatedId = this.generateProductId(productsData.products);
+    const productWithId = { ...newProduct, id: generatedId };
+    productsData.products.push(productWithId);
+    await this.saveDataToFile(productsData);
+    return productWithId;
+  }
 
-// Add un nuevo producto
-export async function addProduct(product) {
-  const products = await readProductList();
-  const newProductId = Math.max(...products.map((p) => p.id), 0) + 1;
-  const newProduct = { id: newProductId.toString(), ...product };
-  products.push(newProduct);
-  await writeProductList(products);
-  return newProduct;
-}
-
-// Update un producto
-export async function updateProduct(pid, updatedFields) {
-  const products = await readProductList();
-  const productIndex = products.findIndex((product) => product.id === pid);
-  if (productIndex !== -1) {
-    const updatedProduct = { ...products[productIndex], ...updatedFields };
-    products[productIndex] = updatedProduct;
-    await writeProductList(products);
-    return updatedProduct;
-  } else {
+  async updateProduct(productId, updatedProduct) {
+    const productsData = await this.readDataFromFile();
+    const productIndex = productsData.products.findIndex(
+      (product) => product.id === productId
+    );
+    if (productIndex !== -1) {
+      productsData.products[productIndex] = {
+        ...productsData.products[productIndex],
+        ...updatedProduct,
+      };
+      await this.saveDataToFile(productsData);
+      return productsData.products[productIndex];
+    }
     return null;
   }
-}
 
-// Delete un producto
-export async function deleteProduct(pid) {
-  const products = await readProductList();
-  const productIndex = products.findIndex((product) => product.id === pid);
-  if (productIndex !== -1) {
-    const deletedProduct = products.splice(productIndex, 1)[0];
-    await writeProductList(products);
-    return deletedProduct;
-  } else {
+  async deleteProduct(productId) {
+    const productsData = await this.readDataFromFile();
+    const productIndex = productsData.products.findIndex(
+      (product) => product.id === productId
+    );
+    if (productIndex !== -1) {
+      const deletedProduct = productsData.products.splice(productIndex, 1);
+      await this.saveDataToFile(productsData);
+      return deletedProduct[0];
+    }
     return null;
   }
+
+  async readDataFromFile() {
+    try {
+      const data = await fs.readFile(this.productsFilePath, "utf-8");
+      return JSON.parse(data);
+    } catch (error) {
+      console.error(`Error al leer el archivo: ${this.productsFilePath}`);
+      return { products: [] };
+    }
+  }
+
+  async saveDataToFile(data) {
+    try {
+      await fs.writeFile(this.productsFilePath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      console.error(
+        `Error al escribir en el archivo: ${this.productsFilePath}`
+      );
+    }
+  }
+
+  generateProductId(products) {
+    const existingIds = products.map((product) => product.id);
+    let generatedId = "";
+    do {
+      generatedId = Math.random().toString(36).substr(2, 9);
+    } while (existingIds.includes(generatedId));
+    return generatedId;
+  }
 }
+
+export default ProductManager;

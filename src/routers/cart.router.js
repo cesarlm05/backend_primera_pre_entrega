@@ -1,38 +1,45 @@
 import express from "express";
-import {
-  createCart,
-  getCartProducts,
-  addProductToCart,
-} from "../controllers/cartManager.js";
+import CartManager from "../controllers/cartManager.js";
 
+const cartManager = new CartManager();
+
+// Crear el router de Express
 const router = express.Router();
 
-// POST /api/carts/
+// Ruta raíz POST /api/carts/
 router.post("/", async (req, res) => {
-  const cart = await createCart();
-  res.json(cart);
+  const newCart = {
+    products: [],
+  };
+  const createdCart = await cartManager.createCart(newCart);
+  res.status(201).json(createdCart);
 });
 
-// GET /api/carts/:cid
+// Ruta GET /api/carts/:cid
 router.get("/:cid", async (req, res) => {
-  const { cid } = req.params;
-  const cartProducts = await getCartProducts(cid);
-  if (cartProducts) {
-    res.json(cartProducts);
+  const cartId = req.params.cid;
+  const cart = await cartManager.getCartById(cartId);
+  if (cart) {
+    res.json(cart);
   } else {
-    res.status(404).json({ error: "Cart not found" });
+    res.status(404).json({ error: "Carrito no encontrado" });
   }
 });
 
-// POST /api/carts/:cid/product/:pid
+// Ruta POST /api/carts/:cid/product/:pid
 router.post("/:cid/product/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
-  const { quantity } = req.body;
-  const addedProduct = await addProductToCart(cid, pid, quantity);
+  const cartId = req.params.cid;
+  const productId = req.params.pid;
+  const quantity = req.body.quantity || 1;
+  const addedProduct = await cartManager.addProductToCart(
+    cartId,
+    productId,
+    quantity
+  );
   if (addedProduct) {
     res.json(addedProduct);
   } else {
-    res.status(404).json({ error: "Cart or product not found" });
+    res.status(404).json({ error: "Carrito o producto no encontrado" });
   }
 });
 

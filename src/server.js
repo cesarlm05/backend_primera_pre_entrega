@@ -1,19 +1,22 @@
-// server.js
+// Importar los módulos necesarios
 import express from "express";
-import productsRouter from "./routers/product.router.js";
-import cartsRouter from "./routers/cart.router.js";
+import productRouter from "./routers/product.router.js";
+import cartRouter from "./routers/cart.router.js";
 
+// Crear la aplicación Express
 const app = express();
+
+// Configurar el puerto
 const PORT = 8080;
 
-// Parse JSON
+// Configurar middleware para procesar el cuerpo de las solicitudes
 app.use(express.json());
 
-// Routes
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
+// Configurar los routers
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
 
-// Start the server
+// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

@@ -1,81 +1,78 @@
 import express from "express";
 import multer from "multer";
-import {
-  getProductList,
-  getProductById,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/productManager.js";
+import ProductManager from "../controllers/productManager.js";
 
+const productManager = new ProductManager();
+
+// Crear el router de Express
 const router = express.Router();
 
-// Multer configuration for file uploads
-const upload = multer({ dest: "uploads/" });
+// Configurar el middleware de Multer para el manejo de archivos
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directorio donde se guardarán las imágenes
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 
-// GET /api/products/
+// Ruta raíz GET /api/products/
 router.get("/", async (req, res) => {
-  const productList = await getProductList();
-  res.json(productList);
+  const products = await productManager.getAllProducts();
+  res.json(products);
 });
 
-// GET /api/products/:pid
+// Ruta GET /api/products/:pid
 router.get("/:pid", async (req, res) => {
-  const { pid } = req.params;
-  const product = await getProductById(pid);
+  const productId = req.params.pid;
+  const product = await productManager.getProductById(productId);
   if (product) {
     res.json(product);
   } else {
-    res.status(404).json({ error: "Product not found" });
+    res.status(404).json({ error: "Producto no encontrado" });
   }
 });
 
-// POST /api/products/
-router.post("/", upload.array("thumbnails"), async (req, res) => {
-  const {
-    title,
-    description,
-    code,
-    price,
-    status = true,
-    stock,
-    category,
-  } = req.body;
+// Ruta raíz POST /api/products/
+router.post("/", upload.array("thumbnails", 5), async (req, res) => {
+  const { title, description, code, price, stock, category } = req.body;
   const thumbnails = req.files.map((file) => file.path);
-  const product = {
+  const newProduct = {
     title,
     description,
     code,
     price,
-    status,
+    status: true,
     stock,
     category,
     thumbnails,
   };
-  const addedProduct = await addProduct(product);
-  res.json(addedProduct);
+  const createdProduct = await productManager.addProduct(newProduct);
+  res.status(201).json(createdProduct);
 });
 
-// PUT /api/products/:pid
+// Ruta PUT /api/products/:pid
 router.put("/:pid", async (req, res) => {
-  const { pid } = req.params;
-  const updatedFields = req.body;
-  const updatedProduct = await updateProduct(pid, updatedFields);
-  if (updatedProduct) {
-    res.json(updatedProduct);
+  const productId = req.params.pid;
+  const updatedProduct = req.body;
+  const product = await productManager.updateProduct(productId, updatedProduct);
+  if (product) {
+    res.json(product);
   } else {
-    res.status(404).json({ error: "Product not found" });
+    res.status(404).json({ error: "Producto no encontrado" });
   }
 });
 
-// DELETE /api/products/:pid
+// Ruta DELETE /api/products/:pid
 router.delete("/:pid", async (req, res) => {
-  const { pid } = req.params;
-  const deletedProduct = await deleteProduct(pid);
+  const productId = req.params.pid;
+  const deletedProduct = await productManager.deleteProduct(productId);
   if (deletedProduct) {
-    res.json(deletedProduct);
+    res.json({ message: "Producto eliminado exitosamente" });
   } else {
-    res.status(404).json({ error: "Product not found" });
+    res.status(404).json({ error: "Producto no encontrado" });
   }
 });
 
