@@ -1,6 +1,32 @@
 {
   "products": [
     {
+      "title": "Notebook",
+      "description": "Lenovo",
+      "code": "lenov213",
+      "price": "578999",
+      "status": true,
+      "stock": "45",
+      "category": "portatiles",
+      "thumbnails": [
+        "uploads/descarga.png"
+      ],
+      "id": "fs5z6u00q"
+    },
+    {
+      "title": "Camara 360",
+      "description": "GoPro 6000",
+      "code": "gpro342",
+      "price": "125778",
+      "status": true,
+      "stock": "67",
+      "category": "camaras",
+      "thumbnails": [
+        "uploads/MG_2644-Edit.jpg"
+      ],
+      "id": "up94iywh8"
+    },
+    {
       "title": "Reloj",
       "description": "Amazfit",
       "code": "ama342",
@@ -12,7 +38,21 @@
         "uploads/descarga.png",
         "uploads/Lujan.png"
       ],
-      "id": "qdbtlng28"
+      "id": "7vjtoppi5"
+    },
+    {
+      "title": "Reloj",
+      "description": "Amazfit",
+      "code": "ama342",
+      "price": "16790",
+      "status": true,
+      "stock": "23",
+      "category": "relojes",
+      "thumbnails": [
+        "uploads/descarga.png",
+        "uploads/Lujan.png"
+      ],
+      "id": "ok5h3rkxy"
     }
   ]
 }
